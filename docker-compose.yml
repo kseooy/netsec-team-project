@@ -4,10 +4,12 @@ services:
   firewall:
     build: ./firewall
     container_name: firewall
+    ports:
+      - "127.0.0.1:8888:80"
     cap_add:
-      - NET_ADMIN                
+      - NET_ADMIN
     sysctls:
-      - net.ipv4.ip_forward=1    
+      - net.ipv4.ip_forward=1
     environment:
       - ADMIN_USER=${ADMIN_USER:-admin}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?.env 파일에 ADMIN_PASSWORD를 설정하세요}
@@ -26,7 +28,7 @@ services:
       - ./web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./web/html:/usr/share/nginx/html:ro
     networks:
-      internal: { ipv4_address: 10.0.2.10 }   # 내부망에만 연결
+      internal: { ipv4_address: 10.0.2.10 } # 내부망에만 연결
 
   admin-pc:
     build: ./client
@@ -40,11 +42,22 @@ services:
     networks:
       external: { ipv4_address: 10.0.1.200 }
 
+  user-browser:
+    image: jlesage/firefox
+    container_name: user-browser
+    shm_size: "1gb"
+    environment:
+      - ENABLE_CJK_FONT=1
+    ports:
+      - "127.0.0.1:5800:5800"
+    networks:
+      external: { ipv4_address: 10.0.1.201 }
+
 networks:
   external:
     ipam:
       config: [{ subnet: 10.0.1.0/24 }]
   internal:
-    internal: true    # 외부와 직접 연결 안 되는 망
+    internal: true # 외부와 직접 연결 안 되는 망
     ipam:
       config: [{ subnet: 10.0.2.0/24 }]

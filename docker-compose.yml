@@ -1,0 +1,50 @@
+name: netsec
+
+services:
+  firewall:
+    build: ./firewall
+    container_name: firewall
+    cap_add:
+      - NET_ADMIN                
+    sysctls:
+      - net.ipv4.ip_forward=1    
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?.env 파일에 ADMIN_PASSWORD를 설정하세요}
+      - ADMIN_IP=10.0.1.100
+      - WEB_IP=10.0.2.10
+      - EXT_IP=10.0.1.2
+      - INT_IP=10.0.2.2
+    networks:
+      external: { ipv4_address: 10.0.1.2 }
+      internal: { ipv4_address: 10.0.2.2 }
+
+  web:
+    image: nginx:alpine
+    container_name: web
+    volumes:
+      - ./web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./web/html:/usr/share/nginx/html:ro
+    networks:
+      internal: { ipv4_address: 10.0.2.10 }   # 내부망에만 연결
+
+  admin-pc:
+    build: ./client
+    container_name: admin-pc
+    networks:
+      external: { ipv4_address: 10.0.1.100 }
+
+  user-pc:
+    build: ./client
+    container_name: user-pc
+    networks:
+      external: { ipv4_address: 10.0.1.200 }
+
+networks:
+  external:
+    ipam:
+      config: [{ subnet: 10.0.1.0/24 }]
+  internal:
+    internal: true    # 외부와 직접 연결 안 되는 망
+    ipam:
+      config: [{ subnet: 10.0.2.0/24 }]

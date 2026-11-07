@@ -1,5 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>Secure Web Server</title></head>
-<body><h1>네트워크보안 팀 프로젝트</h1><p>D 담당: 페이지 제작 예정</p></body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Secure Web Server</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <p class="tag">2026-2 네트워크보안 팀 프로젝트</p>
+    <h1>안전한 Linux 웹서버</h1>
+    <p class="ok">이 페이지가 보인다면 방화벽을 거쳐 웹서버(TCP 80)에 정상 접속된 것입니다.</p>
+
+    <h2>구성</h2>
+    <div class="flow">
+      <span>관리자PC · 일반PC<small>10.0.1.0/24</small></span>
+      <b>→</b>
+      <span>방화벽<small>10.0.1.2 | 10.0.2.2</small></span>
+      <b>→</b>
+      <span>웹서버 (nginx)<small>10.0.2.10 · 내부망 전용</small></span>
+    </div>
+
+    <h2>보안 설정</h2>
+    <ul>
+      <li><strong>방화벽</strong> — 웹서비스(80) 외 모든 접근 차단</li>
+      <li><strong>관리자 접근통제</strong> — 관리자 IP + ID/PW로만 방화벽 SSH 접속</li>
+      <li><strong>웹서버</strong> — 버전 정보 숨김, 보안 헤더, GET/HEAD 외 메서드 차단, 숨김 파일·디렉터리 목록 차단, 자체 에러 페이지</li>
+    </ul>
+  </main>
+</body>
 </html>

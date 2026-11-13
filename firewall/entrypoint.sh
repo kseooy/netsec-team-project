@@ -12,6 +12,7 @@ echo "[정보] 외부: $EXT_IF / 내부: $INT_IF"
 /fw/setup_ssh.sh     # C
 /fw/rules_basic.sh   # A
 /fw/rules_admin.sh   # B
+/fw/rules_extra.sh   # 팀장 (추가 보안)
 
 iptables -L -n -v
 iptables -t nat -L -n -v
